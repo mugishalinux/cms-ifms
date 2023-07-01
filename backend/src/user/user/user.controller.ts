@@ -46,23 +46,16 @@ export class UserController {
     private jwtService: JwtService,
   ) {}
 
-  @Post("createSkipper")
+  @Post("createMentor")
   @ApiBearerAuth()
-  async createSkipper(@Body() userDto: RegisterDto) {
-    userDto.access_level = "skipper";
+  async createMentor(@Body() userDto: RegisterDto) {
+    userDto.access_level = "mentor";
     return this.userService.createUsers(userDto);
   }
   @Post("createAdmin")
   @ApiBearerAuth()
   async createAdmin(@Body() userDto: RegisterDto) {
     userDto.access_level = "admin";
-    return this.userService.createUsers(userDto);
-  }
-
-  @Post("createClient")
-  @ApiBearerAuth()
-  async createClient(@Body() userDto: RegisterDto) {
-    userDto.access_level = "client";
     return this.userService.createUsers(userDto);
   }
 
@@ -80,7 +73,7 @@ export class UserController {
   @ApiBearerAuth()
   @HasRoles("admin")
   @UseGuards(JwtAuthGuard)
-  @Put("activateSkipperAccount/:id")
+  @Put("activateMentorAccount/:id")
   @ApiBearerAuth()
   async activateSkipperAccount(@Param("id") id: number) {
     return this.userService.approveSkipperAccount(id);
@@ -88,7 +81,7 @@ export class UserController {
   @ApiBearerAuth()
   @HasRoles("admin")
   @UseGuards(JwtAuthGuard)
-  @Put("disableSkipperAccount/:id")
+  @Put("disableMentorAccount/:id")
   @ApiBearerAuth()
   async disableSkipperAccount(@Param("id") id: number) {
     return this.userService.disableSkipperAccount(id);
@@ -110,7 +103,7 @@ export class UserController {
   @ApiQuery({ required: false, name: "pageSize" })
   @ApiQuery({ required: false, name: "email" })
   @ApiQuery({ required: false, name: "search" })
-  @Get("/getAllSkipper")
+  @Get("/getAllMentor")
   async getAllSkipper(
     @Request() req,
     @Query("pageNumber") pageNumber: number,
@@ -153,7 +146,7 @@ export class UserController {
       {
         // ...filter,
         status: Not(8),
-        access_level: Not("skipper"),
+        access_level: Not("mentor"),
       },
     );
     return user;

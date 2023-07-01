@@ -1,3 +1,4 @@
+import { Certificate } from "../../certificates/entity/certificate.entity";
 import {
   BaseEntity,
   BeforeInsert,
@@ -11,15 +12,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { User } from "../../user/user/entity/user.entity";
+import { Category } from "../../category/entity/category.entity";
 
-import { ApiProperty } from "@nestjs/swagger";
-import { Exclude } from "class-transformer";
-import { Role } from "../enums/role";
-import { Certificate } from "../../../certificates/entity/certificate.entity";
-import { Victim } from "../../../victim/entity/victim.entity";
-
-@Entity("users")
-export class User extends BaseEntity {
+@Entity("victim")
+export class Victim extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ nullable: true })
@@ -28,15 +25,8 @@ export class User extends BaseEntity {
   firstName: string;
   @Column({ nullable: true })
   dob: Date;
-  @Column({ nullable: true })
-  profilePicture: string;
   @Column()
   primaryPhone: string;
-  @Column({ nullable: true })
-  @Exclude()
-  password: string;
-  @Column()
-  access_level: string;
   @Column()
   status: number;
   @Column({ nullable: true })
@@ -47,6 +37,10 @@ export class User extends BaseEntity {
   created_at: Date;
   @UpdateDateColumn()
   updated_at: Date;
-  @OneToMany(() => Victim, (victim) => victim.user)
-  victim: Victim[];
+  @OneToOne(() => Certificate, (certificate) => certificate.victim) // specify inverse side as a second parameter
+  certificate: Certificate;
+  @ManyToOne(() => User, (user) => user.victim)
+  user: User;
+  @ManyToOne(() => Category, (category) => category.victim, { nullable: true })
+  category: Category | null;
 }

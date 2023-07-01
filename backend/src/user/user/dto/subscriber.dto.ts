@@ -44,7 +44,7 @@ export class SubscriberDto extends BaseEntity {
   })
   childreenNumber: number;
   @IsNotEmpty()
-  @Matches(/(2507[8,2,3,9])[0-9]{7}/, {
+  @Matches(/(07[8,2,3,9])[0-9]{7}/, {
     message:
       "Primary Phone Number must be Airtel or MTN number formatted like 2507*********",
   })

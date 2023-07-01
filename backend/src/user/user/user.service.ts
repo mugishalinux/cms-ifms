@@ -17,7 +17,6 @@ import e from "express";
 import { RegisterDto } from "./dto/register.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ForgetPasswordDto } from "./dto/forget.password";
-import { SupportingDoc } from "./entity/other.doc.entity";
 
 export type Usa = any;
 @Injectable()
@@ -48,18 +47,13 @@ export class UserService {
     user.password = hashedPassword;
     try {
       const data = await user.save();
-      const supportingDoc = new SupportingDoc();
-      supportingDoc.nationalId = userData.nationalIdentification;
-      supportingDoc.rdbCertificate = userData.rdbCertificate;
-      supportingDoc.user = data;
-      await supportingDoc.save();
       return this.response.postResponse(data.id);
     } catch (error) {
       throw new InternalServerErrorException("something wrong : ", error);
     }
   }
 
-  async getAllSkipper() {
+  async getAllMentor() {
     return User.find({
       where: { status: Not(8), access_level: Not("admin") },
     });
@@ -68,14 +62,14 @@ export class UserService {
   async getAllUsers() {
     return User.find({
       where: { status: Not(8) },
-      relations: ["supportingDoc"],
+     
     });
   }
 
-  async getAllUsersByAccessLevel(role:string) {
+  async getAllUsersByAccessLevel(role: string) {
     return User.find({
-      where: { status: Not(8), access_level:role},
-      relations: ["supportingDoc"],
+      where: { status: Not(8), access_level: role },
+      
     });
   }
 
