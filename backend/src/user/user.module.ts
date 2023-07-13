@@ -7,12 +7,15 @@ import { ResponseModule } from "../response/response.module";
 
 import { FilterHelper } from "../helpers/filter.helper";
 import { AdminSeeder } from "./user/admin.seeder";
+import { LocationController } from "./user/location.controller";
+import { LocationService } from "./user/location.service";
 
 @Module({
   imports: [forwardRef(() => AuthModule), ResponseModule],
-  controllers: [UserController,],
+  controllers: [UserController, LocationController],
   providers: [
     UserService,
+    LocationService,
     JwtService,
     AdminSeeder,
     FilterHelper,

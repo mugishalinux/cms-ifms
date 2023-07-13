@@ -17,6 +17,9 @@ import { Exclude } from "class-transformer";
 import { Role } from "../enums/role";
 import { Certificate } from "../../../certificates/entity/certificate.entity";
 import { Victim } from "../../../victim/entity/victim.entity";
+import { District } from "./district.entity";
+import { Province } from "./province.entity";
+import { Sector } from "./sector.entity";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -49,4 +52,10 @@ export class User extends BaseEntity {
   updated_at: Date;
   @OneToMany(() => Victim, (victim) => victim.user)
   victim: Victim[];
+  @ManyToOne(() => District, (district) => district.user, { nullable: true })
+  district: District;
+  @ManyToOne(() => Province, (province) => province.user, { nullable: true })
+  province: Province;
+  @ManyToOne(() => Sector, (sector) => sector.user, { nullable: true })
+  sector: Sector;
 }

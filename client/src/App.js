@@ -25,7 +25,8 @@ import { DarkModeContext } from "./context/darkModeContext";
 import BookingList from "./pages/booking/BookingList";
 import { RequireAuth } from "react-auth-kit";
 import Skipper from "./pages/skippers/Skipper";
-import Location from "./pages/Locations/Location";
+import Victim from "./pages/victim/Victim";
+import Categories from "./pages/Locations/Categories";
 import Boat from "./pages/Boat/Boat";
 import NewBoat from "./pages/new_boat/New";
 import Payment from "./pages/payments/Payment";
@@ -67,23 +68,32 @@ function App() {
             <Route path="appointment" element={<AppointmentList />} />
             <Route path="appoint" element={<Appoint />} />
             <Route
-              path="skipper"
+              path="user"
               element={
                 <RequireAuth loginPath="/">
                   <Skipper />
                 </RequireAuth>
               }
             />
+            <Route
+              path="victims"
+              element={
+                <RequireAuth loginPath="/">
+                  <Victim />
+                </RequireAuth>
+              }
+            />
 
-            <Route path="location">
+            <Route path="categories">
               <Route
                 index
                 element={
                   <RequireAuth loginPath="/">
-                    <Location />
+                    <Categories />
                   </RequireAuth>
                 }
               />
+
               <Route
                 path=":locationId"
                 element={

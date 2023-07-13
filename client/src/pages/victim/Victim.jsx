@@ -5,9 +5,9 @@ import { useAuthUser } from "react-auth-kit";
 import React, { useState, useEffect } from "react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import AdminSidebar from "../../components/sidebar/AdminSidebar";
-import Datatable from "../../components/datatable/SkippersList";
+import Datatable from "../../components/datatable/VictimList";
 
-const Skipper = () => {
+const Victim = () => {
   const auth = useAuthUser();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,4 +41,4 @@ const Skipper = () => {
   );
 };
 
-export default Skipper;
+export default Victim;

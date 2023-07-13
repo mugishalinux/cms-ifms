@@ -266,29 +266,14 @@ const UsersList = () => {
         return (
           <div className="cellAction">
             <div
-              className="viewButton"
-              onClick={() => {
-                // openPop()
-                setOpen(true);
-                setRowValue(params.row);
-                setImages([
-                  params.row.supportingDoc.rdbCertificate,
-                  params.row.supportingDoc.nationalId,
-                ]);
-              }}
-            >
-              view attachment
-            </div>
-
-            <div
               className="updateButton"
               onClick={() => {
                 // openPop()
                 let url = "";
                 if (params.row.status == 2) {
-                  url = `${BASE_URL}/user/activateSkipperAccount/${params.row.id}`;
+                  url = `${BASE_URL}/user/activateMentorAccount/${params.row.id}`;
                 } else if (params.row.status == 1) {
-                  url = `${BASE_URL}/user/disableSkipperAccount/${params.row.id}`;
+                  url = `${BASE_URL}/user/disableMentorAccount/${params.row.id}`;
                 }
 
                 const status =

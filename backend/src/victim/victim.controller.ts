@@ -29,6 +29,7 @@ import { RolesGuard } from "../auth/roles.guard";
 import { CategoryUpateDto } from "./update.dto";
 import { VictimService } from "./victim.service";
 import { VictimRegisterDto } from "./register.victim";
+import { User } from "../user/user/entity/user.entity";
 
 @Controller("victim")
 @ApiTags("victim")
@@ -59,10 +60,18 @@ export class VictimController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get("")
-  getSingleAllVictims() {
-    return this.victimService.getAllVictims();
+  async getSingleAllVictims(@Request() req) {
+    const user = await User.findOne({
+      where: { id: req.user.userId },
+    });
+    if (!user)
+      throw new BadRequestException(`This user ${req.user.userId} not found`);
+    if (user.access_level == "mentor") {
+      return this.victimService.getAllByUserVictims(req.user.userId);
+    } else {
+      return this.victimService.getAllVictims();
+    }
   }
-
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)

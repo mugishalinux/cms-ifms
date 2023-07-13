@@ -46,7 +46,7 @@ export class SubscriberDto extends BaseEntity {
   @IsNotEmpty()
   @Matches(/(07[8,2,3,9])[0-9]{7}/, {
     message:
-      "Primary Phone Number must be Airtel or MTN number formatted like 2507*********",
+      "Primary Phone Number must be Airtel or MTN number formatted like 07*********",
   })
   @ApiProperty({
     description: "primary phone required",
@@ -55,7 +55,7 @@ export class SubscriberDto extends BaseEntity {
   @IsOptional()
   @Matches(/(07[8,2,3,9])[0-9]{7}/, {
     message:
-      "Secondary Phone Number must be Airtel or MTN number formatted like 2507*********",
+      "Secondary Phone Number must be Airtel or MTN number formatted like 07*********",
   })
   @ApiProperty({
     description: "secondary phone",

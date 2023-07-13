@@ -17,6 +17,9 @@ import e from "express";
 import { RegisterDto } from "./dto/register.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ForgetPasswordDto } from "./dto/forget.password";
+import { Province } from "./entity/province.entity";
+import { District } from "./entity/district.entity";
+import { Sector } from "./entity/sector.entity";
 
 export type Usa = any;
 @Injectable()
@@ -32,6 +35,26 @@ export class UserService {
       throw new BadRequestException(
         `This phone number ${userData.phoneNumber} already taken`,
       );
+    const province = await Province.findOne({
+      where: { id: userData.province },
+    });
+    if (!province)
+      throw new BadRequestException(
+        `This province ${userData.province} not found`,
+      );
+    const district = await District.findOne({
+      where: { id: userData.district },
+    });
+    if (!district)
+      throw new BadRequestException(
+        `This district ${userData.district} not found`,
+      );
+    const sector = await Sector.findOne({
+      where: { id: userData.sector },
+    });
+    if (!sector)
+      throw new BadRequestException(`This sector ${userData.sector} not found`);
+    userData.district;
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
     user.dob = userData.dob;
@@ -41,7 +64,9 @@ export class UserService {
     user.created_by = 1;
     user.updated_by = 1;
     user.profilePicture = userData.profilePicture;
-
+    user.province = province;
+    user.district = district;
+    user.sector = sector;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(userData.password, 12);
     user.password = hashedPassword;
@@ -62,14 +87,12 @@ export class UserService {
   async getAllUsers() {
     return User.find({
       where: { status: Not(8) },
-     
     });
   }
 
   async getAllUsersByAccessLevel(role: string) {
     return User.find({
       where: { status: Not(8), access_level: role },
-      
     });
   }
 
@@ -83,6 +106,7 @@ export class UserService {
     //check if a user exist
     const user = await User.findOne({
       where: { status: Not(8), id: id },
+      relations:["province","district","sector"]
     });
     if (!user) throw new BadRequestException(`User with ID ${id} not found`);
     return user;
@@ -101,10 +125,32 @@ export class UserService {
       throw new BadRequestException(
         `Phone number ${userData.phoneNumber} already exist `,
       );
+    const province = await Province.findOne({
+      where: { id: userData.province },
+    });
+    if (!province)
+      throw new BadRequestException(
+        `This province ${userData.province} not found`,
+      );
+    const district = await District.findOne({
+      where: { id: userData.district },
+    });
+    if (!district)
+      throw new BadRequestException(
+        `This district ${userData.district} not found`,
+      );
+    const sector = await Sector.findOne({
+      where: { id: userData.sector },
+    });
+    if (!sector)
+      throw new BadRequestException(`This sector ${userData.sector} not found`);
     user.firstName = userData.firstName;
     user.lastName = userData.lastName;
     user.primaryPhone = userData.phoneNumber;
     user.dob = userData.dob;
+    user.province = province;
+    user.district = district;
+    user.sector = sector;
     try {
       const data = await User.update(id, user);
       return this.response.updateResponse(id);

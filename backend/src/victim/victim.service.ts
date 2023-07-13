@@ -98,6 +98,12 @@ export class VictimService {
       throw new InternalServerErrorException("something wrong : ", error);
     }
   }
+  async getAllByUserVictims(id: number) {
+    return Victim.find({
+      where: { status: Not(8), user: { id } },
+      relations: ["category"],
+    });
+  }
   async getAllVictims() {
     return Victim.find({ where: { status: Not(8) }, relations: ["category"] });
   }

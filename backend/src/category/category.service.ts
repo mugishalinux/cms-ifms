@@ -57,15 +57,16 @@ export class CategoryService {
     return category;
   }
   async deleteCategory(id: number, userId: number) {
-    const location = await Category.findOne({
+    const category = await Category.findOne({
       where: { id },
     });
-    if (!location)
+    
+    if (!category)
       throw new BadRequestException(`This category ${id} not found`);
     try {
-      location.status = 8;
-      location.updated_by = userId;
-      await Category.update(id, location);
+      category.status = 8;
+      category.updated_by = userId;
+      await Category.update(id, category);
       return this.response.deleteResponse(id);
     } catch (error) {
       throw new InternalServerErrorException("something wrong : ", error);

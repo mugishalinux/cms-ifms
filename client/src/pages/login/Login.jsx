@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./login.css";
-import logo from "./16631.png";
+import logo from "./woman.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
@@ -79,11 +79,7 @@ const Login = () => {
 
           setIsLoading(false); // Show the loader
 
-          if (access_level === "admin") {
-            navigate("/skipper"); // Redirect to "/skipper" for admin
-          } else {
-            navigate("/home"); // Redirect to "/home" for non-admin
-          }
+          navigate("/home"); // Redirect to "/home" for non-admin
         }
       })
       .catch((error) => {

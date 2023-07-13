@@ -23,6 +23,9 @@ import { VictimModule } from "./victim/victim.module";
 import { Victim } from "./victim/entity/victim.entity";
 import { Certificate } from "./certificates/entity/certificate.entity";
 import { CertificateModule } from "./certificates/certificate.module";
+import { Province } from "./user/user/entity/province.entity";
+import { District } from "./user/user/entity/district.entity";
+import { Sector } from "./user/user/entity/sector.entity";
 
 @Module({
   imports: [
@@ -38,7 +41,7 @@ import { CertificateModule } from "./certificates/certificate.module";
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DB,
-      entities: [User, Category, Victim, Certificate],
+      entities: [User, Category, Victim, Certificate, Province, District, Sector],
       logging: false,
       synchronize: true,
       // logging:true

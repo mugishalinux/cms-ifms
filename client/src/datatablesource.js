@@ -149,7 +149,7 @@ export const skippersColumn = [
   {
     field: "dob",
     headerName: "dob",
-    width: 100,
+    width: 150,
     renderCell: (params) => {
       const dob = new Date(params.row.dob);
       const formattedDate = dob.toLocaleDateString("en-US", {
@@ -166,54 +166,21 @@ export const skippersColumn = [
     width: 130,
     renderCell: (params) => {
       const phoneNumber = params.row.primaryPhone;
-      const reformattedPhone = phoneNumber.substring(2);
+      const reformattedPhone = phoneNumber.substring(0);
 
       return <div className="cellWithImg">{reformattedPhone}</div>;
     },
   },
-  // {
-  //   field: "NID",
-  //   headerName: "NID",
-  //   width: 150,
-  //   renderCell: (params) => {
-  //     const nationalIdUrl = params.row.supportingDoc.nationalId;
-  //     return (
-  //       <div className="cellWithImg">
-  //         <img
-  //           src={nationalIdUrl}
-  //           alt="NID"
-  //           style={{ padding: "10px", maxWidth: "100px" }}
-  //         />
-  //       </div>
-  //     );
-  //   },
-  // },
-  // {
-  //   field: "RDB Certificate",
-  //   headerName: "RDB Certificate",
-  //   width: 150,
-  //   renderCell: (params) => {
-  //     const rdbCertificateUrl = params.row.supportingDoc.rdbCertificate;
-  //     return (
-  //       <div className="cellWithImg">
-  //         <img
-  //           src={rdbCertificateUrl}
-  //           alt="RDB Certificate"
-  //           style={{ padding: "10px", maxWidth: "100px" }}
-  //         />
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    field: "user access",
+    headerName: "user access",
+    width: 130,
+    renderCell: (params) => {
+      const status = params.row.access_level;
 
-  // {
-  //   field: "status",
-  //   headerName: "status",
-  //   width: 100,
-  //   renderCell: (params) => {
-  //     return <div className="cellWithImg">{params.row.status}</div>;
-  //   },
-  // },
+      return <div className="cellWithImg">{status}</div>;
+    },
+  },
 ];
 
 export const boatColumn = [
@@ -345,7 +312,7 @@ export const appointColumns = [
   },
 ];
 
-export const locationColumns = [
+export const categoryColumns = [
   {
     field: "id",
     headerName: "ID",
@@ -355,11 +322,75 @@ export const locationColumns = [
     },
   },
   {
-    field: "Location Name",
-    headerName: "Location Name",
+    field: "Category Name",
+    headerName: "Category Name",
     width: 200,
     renderCell: (params) => {
-      return <div className="cellWithImg">{params.row.locationName}</div>;
+      return <div className="cellWithImg">{params.row.cateogryName}</div>;
+    },
+  },
+];
+
+export const victimColumns = [
+  {
+    field: "id",
+    headerName: "ID",
+    width: 40,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.id}</div>;
+    },
+  },
+  {
+    field: "Last Name",
+    headerName: "Last Name",
+    width: 200,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.lastName}</div>;
+    },
+  },
+  {
+    field: "First Name",
+    headerName: "First Name",
+    width: 200,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.firstName}</div>;
+    },
+  },
+
+  {
+    field: "Birth Date",
+    headerName: "Birth Date",
+    width: 200,
+    renderCell: (params) => {
+      const dob = new Date(params.row.dob);
+      const formattedDate = dob.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      return <div className="cellWithImg">{formattedDate}</div>;
+    },
+  },
+  {
+    field: "phone",
+    headerName: "phone",
+    width: 130,
+    renderCell: (params) => {
+      const phoneNumber = params.row.primaryPhone;
+      const reformattedPhone = phoneNumber.substring(0);
+
+      return <div className="cellWithImg">{reformattedPhone}</div>;
+    },
+  },
+  {
+    field: "Category Name",
+    headerName: "Category Name",
+    width: 130,
+    renderCell: (params) => {
+      const category = params.row.category || {}; // Use an empty object as fallback
+      const categoryName = category.cateogryName || "-";
+
+      return <div className="cellWithImg">{categoryName}</div>;
     },
   },
 ];

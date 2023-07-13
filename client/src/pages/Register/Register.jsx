@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./register.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import { ToastContainer, toast } from "react-toastify";
 import { BASE_URL } from "../../config/baseUrl";
-import { TextField, CircularProgress } from "@mui/material";
+import { TextField, CircularProgress, MenuItem } from "@mui/material";
 import styled from "styled-components";
 import { makeStyles } from "@material-ui/core/styles";
 import { Stepper, Step, StepLabel, Button } from "@material-ui/core";
@@ -54,15 +54,63 @@ const Register = () => {
     phoneNumber: "",
     dob: "",
     password: "",
-    access_level: "skipper",
+    access_level: "mentor",
     profilePicture: null,
-    nationalIdentification: null,
-    rdbCertificate: null,
+    province: 0,
+    district: 0,
+    sector: 0,
   });
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [sectors, setSectors] = useState([]);
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/location/province`);
+        setProvinces(response.data);
+      } catch (error) {
+        console.error("Error fetching provinces:", error);
+      }
+    };
+
+    fetchProvinces();
+  }, []);
+
+  const fetchDistricts = async (provinceId) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/location/district/${provinceId}`
+      );
+      setDistricts(response.data);
+    } catch (error) {
+      console.error("Error fetching districts:", error);
+    }
+  };
+
+  const fetchSectors = async (districtId) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/location/sector/${districtId}`
+      );
+      setSectors(response.data);
+    } catch (error) {
+      console.error("Error fetching sectors:", error);
+    }
+  };
 
   const handleInputs = (e) => {
     const { name, value } = e.target;
     setReg({ ...reg, [name]: value });
+
+    if (name === "province") {
+      setReg({ ...reg, [name]: value, district: 0, sector: 0 });
+      fetchDistricts(value);
+    } else if (name === "district") {
+      setReg({ ...reg, [name]: value, sector: 0 });
+      fetchSectors(value);
+    }
   };
 
   const validateDob = (value) => {
@@ -96,9 +144,34 @@ const Register = () => {
     const { firstName, lastName, phoneNumber, dob, password } = reg;
 
     if (firstName && lastName && phoneNumber && dob && password) {
-      setActiveStep((prevStep) => prevStep + 1);
+      if (activeStep === 1) {
+        setActiveStep(2);
+      } else {
+        setActiveStep((prevStep) => prevStep + 1);
+      }
     } else {
-      toast.error("Please fill in all the fields", {
+      let errorMessage = "Please fill in all the required fields: ";
+      let missingFields = [];
+
+      if (!firstName) {
+        missingFields.push("First Name");
+      }
+      if (!lastName) {
+        missingFields.push("Last Name");
+      }
+      if (!phoneNumber) {
+        missingFields.push("Phone Number");
+      }
+      if (!dob) {
+        missingFields.push("Date of Birth");
+      }
+      if (!password) {
+        missingFields.push("Password");
+      }
+
+      errorMessage += missingFields.join(", ");
+
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -118,19 +191,11 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      reg.profilePicture &&
-      reg.nationalIdentification &&
-      reg.rdbCertificate
-    ) {
+    if (reg.profilePicture && reg.province && reg.district && reg.sector) {
       setIsLoading(true);
 
       try {
         const profilePictureUrl = await handleImageUpload(reg.profilePicture);
-        const nationalIdentificationUrl = await handleImageUpload(
-          reg.nationalIdentification
-        );
-        const rdbCertificateUrl = await handleImageUpload(reg.rdbCertificate);
 
         const requestBody = {
           firstName: reg.firstName,
@@ -138,14 +203,15 @@ const Register = () => {
           phoneNumber: reg.phoneNumber,
           dob: reg.dob,
           password: reg.password,
-          access_level: "skipper",
+          access_level: "mentor",
           profilePicture: profilePictureUrl,
-          nationalIdentification: nationalIdentificationUrl,
-          rdbCertificate: rdbCertificateUrl,
+          province: reg.province,
+          district: reg.district,
+          sector: reg.sector,
         };
 
         const response = await axios.post(
-          `${BASE_URL}/user/createSkipper`,
+          `${BASE_URL}/user/createMentor`,
           requestBody
         );
 
@@ -180,7 +246,25 @@ const Register = () => {
         setIsLoading(false);
       }
     } else {
-      toast.error("Please upload all the required files", {
+      let errorMessage = "Please upload all the required files: ";
+      let missingFields = [];
+
+      if (!reg.profilePicture) {
+        missingFields.push("Profile Picture");
+      }
+      if (!reg.province) {
+        missingFields.push("Province");
+      }
+      if (!reg.district) {
+        missingFields.push("District");
+      }
+      if (!reg.sector) {
+        missingFields.push("Sector");
+      }
+
+      errorMessage += missingFields.join(", ");
+
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -191,8 +275,6 @@ const Register = () => {
         theme: "light",
       });
     }
-
-    console.log(reg);
   };
 
   return (
@@ -211,6 +293,9 @@ const Register = () => {
             <Step>
               <StepLabel>Step 2</StepLabel>
             </Step>
+            <Step>
+              <StepLabel>Step 3</StepLabel>
+            </Step>
           </Stepper>
           <form className="form-group" onSubmit={handleSubmit}>
             {activeStep === 0 && (
@@ -223,6 +308,7 @@ const Register = () => {
                     value={reg.firstName}
                     className=""
                     placeholder="First Name"
+                    style={{ width: "100%" }}
                     required
                   />
                 </div>
@@ -234,6 +320,7 @@ const Register = () => {
                     value={reg.lastName}
                     className=""
                     placeholder="Last Name"
+                    style={{ width: "100%" }}
                     required
                   />
                 </div>
@@ -245,6 +332,7 @@ const Register = () => {
                     value={reg.phoneNumber}
                     className=""
                     placeholder="Phone"
+                    style={{ width: "100%" }}
                     required
                   />
                 </div>
@@ -257,6 +345,7 @@ const Register = () => {
                     className=""
                     placeholder="Date of Birth"
                     max={getCurrentDate()} // Set the max attribute to the current date
+                    style={{ width: "100%" }}
                     required
                   />
                 </div>
@@ -268,6 +357,7 @@ const Register = () => {
                     value={reg.password}
                     className=""
                     placeholder="Password"
+                    style={{ width: "100%" }}
                     required
                   />
                 </div>
@@ -300,39 +390,96 @@ const Register = () => {
                     required
                   />
                 </div>
-                <div className="form-inpu">
-                  <label>Provide national identification</label>
-                  <input
-                    type="file"
-                    accept=".jpg, .png"
-                    onChange={(e) =>
-                      handleInputs({
-                        target: {
-                          name: "nationalIdentification",
-                          value: e.target.files[0],
-                        },
-                      })
-                    }
-                    required
-                  />
-                </div>
-                <div className="form-inpu">
-                  <label>Provide RDB certificate</label>
-                  <input
-                    type="file"
-                    accept=".jpg, .png"
-                    onChange={(e) =>
-                      handleInputs({
-                        target: {
-                          name: "rdbCertificate",
-                          value: e.target.files[0],
-                        },
-                      })
-                    }
-                    required
-                  />
-                </div>
 
+                <div style={{ paddingBottom: "30px" }} className="form-input">
+                  <Button
+                    style={{ marginTop: "10px", marginBottom: "20px" }}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleBack}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    style={{
+                      marginTop: "10px",
+                      marginBottom: "20px",
+                    }}
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+            {activeStep === 2 && (
+              <div>
+                <div className="form-input">
+                  <TextField
+                    select
+                    name="province"
+                    value={reg.province}
+                    onChange={handleInputs}
+                    variant="outlined"
+                    required
+                    style={{ width: "100%" }}
+                  >
+                    <MenuItem value={0} disabled>
+                      Select your province
+                    </MenuItem>
+                    {provinces.map((province) => (
+                      <MenuItem key={province.id} value={province.id}>
+                        {province.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+                {reg.province !== 0 && (
+                  <div className="form-input">
+                    <TextField
+                      select
+                      name="district"
+                      value={reg.district}
+                      onChange={handleInputs}
+                      variant="outlined"
+                      required
+                      style={{ width: "100%" }}
+                    >
+                      <MenuItem value={0} disabled>
+                        Select your district
+                      </MenuItem>
+                      {districts.map((district) => (
+                        <MenuItem key={district.id} value={district.id}>
+                          {district.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                )}
+                {reg.district !== 0 && (
+                  <div className="form-input">
+                    <TextField
+                      select
+                      name="sector"
+                      value={reg.sector}
+                      onChange={handleInputs}
+                      variant="outlined"
+                      required
+                      style={{ width: "100%" }}
+                    >
+                      <MenuItem value={0} disabled>
+                        Select your sector
+                      </MenuItem>
+                      {sectors.map((sector) => (
+                        <MenuItem key={sector.id} value={sector.id}>
+                          {sector.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                )}
                 <div style={{ paddingBottom: "30px" }} className="form-input">
                   <Button
                     style={{ marginTop: "10px", marginBottom: "20px" }}
@@ -366,7 +513,6 @@ const Register = () => {
                     <button type="submit">Create Account</button>
                   )}
                 </div>
-                
               </div>
             )}
           </form>

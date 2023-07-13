@@ -8,10 +8,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   const config = new DocumentBuilder()
-    .setTitle("boat renting backend v1")
-    .setDescription("boat renting backend v1 API description")
+    .setTitle("childreen and youth mentoring backend v1")
+    .setDescription("childreen and youth mentoring API description")
     .setVersion("1.0")
-    .addTag("boat renting backend v1")
+    .addTag("childreen and youth mentoring")
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

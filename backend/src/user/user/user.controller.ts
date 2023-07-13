@@ -215,7 +215,7 @@ export class UserController {
           profile: user.profilePicture,
           jwtToken,
         });
-      }, 2000); // Delay the response by 3 seconds
+      }, 0); // Delay the response by 3 seconds
     });
   }
 }

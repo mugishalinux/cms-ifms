@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useSignOut } from "react-auth-kit";
 import { useContext } from "react";
-
+import CategoryIcon from "@mui/icons-material/Category";
+import GirlIcon from "@mui/icons-material/Girl";
 const AdminSidebar = () => {
   const signOut = useSignOut();
   const { dispatch } = useContext(DarkModeContext);
@@ -33,17 +34,24 @@ const AdminSidebar = () => {
           </Link>
           <p className="title">LISTS</p>
 
-          <Link to="/skipper" style={{ textDecoration: "none" }}>
+          <Link to="/user" style={{ textDecoration: "none" }}>
             <li>
               <PersonOutlineIcon className="icon" />
               <span>User</span>
             </li>
           </Link>
 
-          <Link to="/location" style={{ textDecoration: "none" }}>
+          <Link to="/categories" style={{ textDecoration: "none" }}>
             <li>
-              <PersonOutlineIcon className="icon" />
-              <span>Locations</span>
+              <CategoryIcon className="icon" />
+              <span>Categories</span>
+            </li>
+          </Link>
+
+          <Link to="/victims" style={{ textDecoration: "none" }}>
+            <li>
+              <GirlIcon className="icon" />
+              <span>Victims</span>
             </li>
           </Link>
 

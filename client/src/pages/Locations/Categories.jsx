@@ -5,9 +5,9 @@ import { useAuthUser } from "react-auth-kit";
 import React, { useState, useEffect } from "react";
 import FullScreenLoader from "../../components/loader/FullScreenLoader";
 import AdminSidebar from "../../components/sidebar/AdminSidebar";
-import Datatable from "../../components/datatable/LocationList";
+import Datatable from "../../components/datatable/categoryList";
 
-const Location = () => {
+const Categories = () => {
   const auth = useAuthUser();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,7 +32,7 @@ const Location = () => {
   }
   return (
     <div className="home">
-      {user && user.access_level == "admin" ? <AdminSidebar /> : <Sidebar />}
+      <AdminSidebar />
       <div className="homeContainer">
         <Navbar imageUrl={user.profile} style={{ marginBottom: "50px" }} />
         <Datatable />
@@ -41,4 +41,4 @@ const Location = () => {
   );
 };
 
-export default Location;
+export default Categories;

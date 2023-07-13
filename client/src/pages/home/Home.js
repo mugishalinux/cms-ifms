@@ -120,28 +120,31 @@ const Home = () => {
   }
   return (
     <div className="home">
-      {user && user.access_level == "admin" ? (
-        <AdminSidebar />
-      ) : (
-        <SkipperSidebar />
-      )}
+      <AdminSidebar />
       <div className="homeContainer">
         <Navbar imageUrl={user.profile} style={{ marginBottom: "50px" }} />
-        <div className="widgets">
-          <Widget type="booking" amount={totalBookings} />
 
-          <Widget type="payments" amount={totalAmount[0].total_amount} />
-          <Widget type="boats" amount={totalBoats} />
+
+
+
+
+
+        <div className="widgets">
+          {/* <Widget type="booking" amount={totalBookings} /> */}
+          <Widget type="booking" amount={400} />
+          {/* <Widget type="payments" amount={totalAmount[0].total_amount} /> */}
+          <Widget type="payments" amount={3000} />
+          {/* <Widget type="boats" amount={totalBoats} /> */}
+          <Widget type="boats" amount={90} />
         </div>
         <div className="charts">
-          <Featured todayIncome={todayIncomes} percentage={todayIncomesPer} />
+          {/* <Featured todayIncome={todayIncomes} percentage={todayIncomesPer} /> */}
+          <Featured todayIncome={todayIncomes} percentage={300} />
+          {/* <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} data={datas} /> */}
           <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} data={datas} />
         </div>
 
-        {/* <div className="listContainer">
-          <div className="listTitle">Latest Transactions</div>
-          <Table />
-        </div> */}
+
       </div>
     </div>
   );
