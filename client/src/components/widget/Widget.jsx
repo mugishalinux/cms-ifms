@@ -6,6 +6,8 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import { Link } from "react-router-dom";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import CategoryIcon from "@mui/icons-material/Category";
+import GirlIcon from "@mui/icons-material/Girl";
 
 const Widget = ({ type, amount }) => {
   let data;
@@ -14,14 +16,14 @@ const Widget = ({ type, amount }) => {
   const diff = 20;
 
   switch (type) {
-    case "user":
+    case "users":
       data = {
         title: "USERS",
         isMoney: false,
         link: "See all users",
-        path: "/payment",
+        path: "/user",
         icon: (
-          <PersonOutlinedIcon
+          <PersonOutlineIcon
             className="icon"
             style={{
               color: "crimson",
@@ -31,14 +33,14 @@ const Widget = ({ type, amount }) => {
         ),
       };
       break;
-    case "booking":
+    case "user":
       data = {
-        title: "Bookings",
+        title: "Users",
         isMoney: false,
-        link: "View all bookings",
-        path: "/bookings",
+        link: "View all users",
+        path: "/user",
         icon: (
-          <ShoppingCartOutlinedIcon
+          <PersonOutlineIcon
             className="icon"
             style={{
               backgroundColor: "rgba(218, 165, 32, 0.2)",
@@ -48,28 +50,28 @@ const Widget = ({ type, amount }) => {
         ),
       };
       break;
-    case "payments":
+    case "victims":
       data = {
-        title: "Payments",
-        isMoney: true,
-        link: "View all payments",
-        path: "/payment",
+        title: "Victims",
+        isMoney: false,
+        link: "View all victims",
+        path: "/victims",
         icon: (
-          <MonetizationOnOutlinedIcon
+          <GirlIcon
             className="icon"
             style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
           />
         ),
       };
       break;
-    case "boats":
+    case "categories":
       data = {
-        title: "Ships",
+        title: "Category",
         isMoney: false,
         link: "See details",
-        path: "/boat",
+        path: "/categories",
         icon: (
-          <AccountBalanceWalletOutlinedIcon
+          <CategoryIcon
             className="icon"
             style={{
               backgroundColor: "rgba(128, 0, 128, 0.2)",
@@ -95,10 +97,7 @@ const Widget = ({ type, amount }) => {
         </Link>
       </div>
       <div className="right">
-        <div className="percentage positive">
-          <KeyboardArrowUpIcon />
-          {diff} %
-        </div>
+        <div className="percentage positive"></div>
         {data.icon}
       </div>
     </div>

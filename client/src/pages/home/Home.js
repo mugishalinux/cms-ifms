@@ -24,6 +24,15 @@ const Home = () => {
   const [todayIncomes, setTodayIncomes] = useState(0);
   const [todayIncomesPer, setTodayIncomesPer] = useState(0);
   const [datas, setDatas] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [christians, setChristians] = useState([]);
+  const [churches, setChurches] = useState([]);
+  const [todayChristiansRegistered, setTodayChristiansRegistered] = useState(0);
+  const [todayVictimRegistered, setTodayVictimRegistered] = useState(0);
+  const [category, setCategories] = useState([]);
+  const [victim, setVictim] = useState([]);
+  const [allVictimsPerProvince, setAllVictimsPerProvince] = useState([]);
+
   useEffect(() => {
     const fetchUserInformation = async () => {
       try {
@@ -33,69 +42,46 @@ const Home = () => {
         // Set the user object in component state
         setUser(userInformation);
 
-        // Fetch total amount
-        const amountResponse = await axios.get(
-          `${BASE_URL}/paymentReports/calculate`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth().jwtToken}`,
-            },
-          }
-        );
-        //total_amount":null
-        setTotalAmount(amountResponse.data);
-
-        // Fetch total bookings
-        const bookingsResponse = await axios.get(
-          `${BASE_URL}/bookingReports/count`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth().jwtToken}`,
-            },
-          }
-        );
-        setTotalBookings(bookingsResponse.data);
-
-        // Fetch total boats
-        const boatsResponse = await axios.get(`${BASE_URL}/boatReports/count`, {
+        //fetch total users
+        const totalUsers = await axios.get(`${BASE_URL}/user`, {
           headers: {
             Authorization: `Bearer ${auth().jwtToken}`,
           },
         });
-        setTotalBoats(boatsResponse.data);
+        setUsers(totalUsers.data);
 
-        const todaysTotalIncomeResponse = await axios.get(
-          `${BASE_URL}/paymentReports/calculateTodayIncome`,
+        //fetch categories
+        const totalCategories = await axios.get(`${BASE_URL}/category`, {
+          headers: {
+            Authorization: `Bearer ${auth().jwtToken}`,
+          },
+        });
+        setCategories(totalCategories.data);
+
+        //fetch victims
+        const totalVictims = await axios.get(`${BASE_URL}/victim`, {
+          headers: {
+            Authorization: `Bearer ${auth().jwtToken}`,
+          },
+        });
+        setVictim(totalVictims.data);
+
+        //fetch victims per provinces
+        const totalVictimsPerProvince = await axios.get(
+          `${BASE_URL}/allReports/victim/per/location`,
           {
             headers: {
               Authorization: `Bearer ${auth().jwtToken}`,
             },
           }
         );
-        setTodayIncomes(todaysTotalIncomeResponse.data);
+        console.log(totalVictimsPerProvince.data)
+        setAllVictimsPerProvince(totalVictimsPerProvince.data);
 
-        const todaysTotalIncomePercentategResponse = await axios.get(
-          `${BASE_URL}/paymentReports/calculateTodayPercentage`,
-          {
-            headers: {
-              Authorization: `Bearer ${auth().jwtToken}`,
-            },
-          }
-        );
-        setTodayIncomesPer(todaysTotalIncomePercentategResponse.data);
+        //fetch victims created in today
 
-        // const sixMonthReportResponse = await axios.get(
-        //   `${BASE_URL}/paymentReports/sixMonthsAgo`,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${auth().jwtToken}`,
-        //     },
-        //   }
-        // );
-        // setDatas(sixMonthReportResponse.data);
-
-        const response = await axios.get(
-          `${BASE_URL}/paymentReports/sixMonthsAgo`,
+        const totalVictimsRegistered = await axios.get(
+          `${BASE_URL}/allReports/victim/registered/today`,
           {
             headers: {
               Authorization: `Bearer ${auth().jwtToken}`,
@@ -103,7 +89,7 @@ const Home = () => {
           }
         );
 
-        setDatas(response.data);
+        setTodayVictimRegistered(totalVictimsRegistered.data);
 
         setIsLoading(false);
       } catch (error) {
@@ -114,7 +100,6 @@ const Home = () => {
 
     fetchUserInformation();
   }, []);
-
   if (isLoading) {
     return <FullScreenLoader />;
   }
@@ -124,27 +109,24 @@ const Home = () => {
       <div className="homeContainer">
         <Navbar imageUrl={user.profile} style={{ marginBottom: "50px" }} />
 
-
-
-
-
-
         <div className="widgets">
           {/* <Widget type="booking" amount={totalBookings} /> */}
-          <Widget type="booking" amount={400} />
+          <Widget type="user" amount={users.length} />
           {/* <Widget type="payments" amount={totalAmount[0].total_amount} /> */}
-          <Widget type="payments" amount={3000} />
+          <Widget type="victims" amount={victim.length} />
           {/* <Widget type="boats" amount={totalBoats} /> */}
-          <Widget type="boats" amount={90} />
+          <Widget type="categories" amount={category.length} />
         </div>
         <div className="charts">
           {/* <Featured todayIncome={todayIncomes} percentage={todayIncomesPer} /> */}
-          <Featured todayIncome={todayIncomes} percentage={300} />
+          <Featured todayIncome={todayVictimRegistered} percentage={300} />
           {/* <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} data={datas} /> */}
-          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} data={datas} />
+          <Chart
+            title="Last 6 Months (Revenue)"
+            aspect={2 / 1}
+            data={allVictimsPerProvince}
+          />
         </div>
-
-
       </div>
     </div>
   );

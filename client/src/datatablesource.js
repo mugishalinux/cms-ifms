@@ -343,7 +343,7 @@ export const victimColumns = [
   {
     field: "Last Name",
     headerName: "Last Name",
-    width: 200,
+    width: 150,
     renderCell: (params) => {
       return <div className="cellWithImg">{params.row.lastName}</div>;
     },
@@ -351,7 +351,7 @@ export const victimColumns = [
   {
     field: "First Name",
     headerName: "First Name",
-    width: 200,
+    width: 130,
     renderCell: (params) => {
       return <div className="cellWithImg">{params.row.firstName}</div>;
     },

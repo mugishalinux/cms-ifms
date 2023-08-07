@@ -15,6 +15,7 @@ import { User } from "../user/user/entity/user.entity";
 import { CertificateService } from "../certificates/certificate.service";
 import { CertificateRegisterDto } from "../certificates/dto/create.certificate.dto";
 import { Category } from "../category/entity/category.entity";
+import { UpdateRegisterDto } from "./update.victim.dto";
 export type Usa = any;
 @Injectable()
 export class VictimService {
@@ -60,7 +61,7 @@ export class VictimService {
     }
   }
 
-  async updateVictim(id: number, data: VictimRegisterDto) {
+  async updateVictim(id: number, data: UpdateRegisterDto) {
     const victim = await Victim.findOne({
       where: { id },
     });

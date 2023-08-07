@@ -22,6 +22,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItem";
 import { BASE_URL } from "../../config/baseUrl";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Container,
@@ -108,6 +109,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const VictimList = () => {
+  const navigate = useNavigate();
   const auth = useAuthUser();
   const classes = useStyles();
   const [user, setUser] = useState([]);
@@ -792,6 +794,7 @@ const VictimList = () => {
         return (
           <div className="cellAction">
             <div
+              style={{ backgroundColor: "green", color: "white" }}
               className="updateButton"
               onClick={() => {
                 setUpdateModalOpen(true);
@@ -806,8 +809,12 @@ const VictimList = () => {
             >
               Update
             </div>
-
             <div
+              style={{
+                backgroundColor: "red",
+                color: "white",
+                marginLeft: "30",
+              }}
               className="deleteButton"
               onClick={() => {
                 let url = `${BASE_URL}/victim/${params.row.id}`;
@@ -867,6 +874,21 @@ const VictimList = () => {
               }}
             >
               Delete
+            </div>
+
+            <div
+              style={{ backgroundColor: "blue", color: "white" }}
+              className="updateButton"
+              onClick={() => {
+                const data = {
+                  names: params.row.firstName + " " + params.row.lastName,
+                  catName: params.row.category.cateogryName,
+                };
+                navigate('/certificate', { state: data });
+              
+              }}
+            >
+              Generate Certificate
             </div>
           </div>
         );

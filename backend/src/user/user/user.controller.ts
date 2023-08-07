@@ -14,6 +14,7 @@ import {
   HttpException,
   HttpStatus,
   ConsoleLogger,
+  ForbiddenException,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { LoginDto } from "./dto/login.dto";
@@ -35,6 +36,8 @@ import { SubscriberDto } from "./dto/subscriber.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { ForgetPasswordDto } from "./dto/forget.password";
+import { use } from "passport";
+import { find } from "rxjs";
 
 @Controller("user")
 @ApiTags("user")
@@ -75,7 +78,14 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Put("activateMentorAccount/:id")
   @ApiBearerAuth()
-  async activateSkipperAccount(@Param("id") id: number) {
+  async activateSkipperAccount(@Request() req, @Param("id") id: number) {
+    const user = await User.findOne({
+      where: { id: req.user.userId },
+    });
+    if (user.access_level == "mentor") {
+      console.log(user);
+      throw new ForbiddenException("You are not allowed activate account");
+    }
     return this.userService.approveSkipperAccount(id);
   }
   @ApiBearerAuth()
@@ -83,7 +93,14 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Put("disableMentorAccount/:id")
   @ApiBearerAuth()
-  async disableSkipperAccount(@Param("id") id: number) {
+  async disableSkipperAccount(@Request() req, @Param("id") id: number) {
+    const user = await User.findOne({
+      where: { id: req.user.userId },
+    });
+    if (user.access_level == "mentor") {
+      console.log(user);
+      throw new ForbiddenException("You are not allowed activate account");
+    }
     return this.userService.disableSkipperAccount(id);
   }
 
@@ -205,14 +222,18 @@ export class UserController {
     const jwtToken = await this.jwtService.signAsync(payload, {
       secret: process.env.JWT_SECRET,
     });
+
+    const userInfo = await User.findOne({
+      where: { id: user.id },
+    });
+
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           id: user.id,
-          names: user.names,
-          phone: user.primaryPhone,
+          status: userInfo.status,
+          names: user.firstName + " " + user.lastName,
           access_level: user.access_level,
-          profile: user.profilePicture,
           jwtToken,
         });
       }, 0); // Delay the response by 3 seconds

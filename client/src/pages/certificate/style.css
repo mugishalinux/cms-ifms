@@ -1,0 +1,12 @@
+/* Default style for the button */
+.print-button {
+    display: block;
+  }
+  
+  /* Style to hide the button when printing */
+  @media print {
+    .print-button {
+      display: none;
+    }
+  }
+  

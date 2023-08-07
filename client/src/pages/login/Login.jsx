@@ -63,6 +63,23 @@ const Login = () => {
       .post(`${BASE_URL}/user/auth/login/user`, data)
       .then((response) => {
         if (response.status == 201) {
+          if (response.data.access_level == "mentor") {
+            setIsLoading(false); // Show the loader
+            toast.error("You can't log in, only admin allowed to login", {
+              position: "bottom-center",
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+            return;
+          }
           const { jwtToken, id, phone, access_level, profile } = response.data;
           signIn({
             token: jwtToken,

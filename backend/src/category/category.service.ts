@@ -60,7 +60,7 @@ export class CategoryService {
     const category = await Category.findOne({
       where: { id },
     });
-    
+
     if (!category)
       throw new BadRequestException(`This category ${id} not found`);
     try {

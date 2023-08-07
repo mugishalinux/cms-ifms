@@ -30,6 +30,7 @@ import { CategoryUpateDto } from "./update.dto";
 import { VictimService } from "./victim.service";
 import { VictimRegisterDto } from "./register.victim";
 import { User } from "../user/user/entity/user.entity";
+import { UpdateRegisterDto } from "./update.victim.dto";
 
 @Controller("victim")
 @ApiTags("victim")
@@ -66,6 +67,7 @@ export class VictimController {
     });
     if (!user)
       throw new BadRequestException(`This user ${req.user.userId} not found`);
+
     if (user.access_level == "mentor") {
       return this.victimService.getAllByUserVictims(req.user.userId);
     } else {
@@ -78,7 +80,7 @@ export class VictimController {
   @Put(":id")
   updateVictim(
     @Param("id") id: number,
-    @Body() data: VictimRegisterDto,
+    @Body() data: UpdateRegisterDto,
     @Request() req,
   ) {
     return this.victimService.updateVictim(id, data);

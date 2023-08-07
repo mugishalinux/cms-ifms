@@ -44,7 +44,7 @@ const AdminHome = () => {
       <div className="homeContainer">
         <Navbar imageUrl={user.profile} style={{ marginBottom: "50px" }} />
         <div className="widgets">
-          <Widget type="booking" amount="100" />
+          <Widget type="user" amount="100" />
           <Widget type="payments" amount="100" />
           <Widget type="boats" amount="100" />
         </div>

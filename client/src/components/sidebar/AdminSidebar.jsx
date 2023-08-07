@@ -26,7 +26,7 @@ const AdminSidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <Link to="" style={{ textDecoration: "none" }}>
+          <Link to="/home" style={{ textDecoration: "none" }}>
             <li>
               <DashboardIcon className="icon" />
               <span>Dashboard</span>

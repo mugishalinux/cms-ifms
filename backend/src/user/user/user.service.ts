@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   HttpStatus,
   Injectable,
   InternalServerErrorException,
@@ -106,7 +107,7 @@ export class UserService {
     //check if a user exist
     const user = await User.findOne({
       where: { status: Not(8), id: id },
-      relations:["province","district","sector"]
+      relations: ["province", "district", "sector"],
     });
     if (!user) throw new BadRequestException(`User with ID ${id} not found`);
     return user;
@@ -164,6 +165,7 @@ export class UserService {
       where: { id },
     });
     if (!user) throw new BadRequestException(`User with ID: ${id} not found`);
+
     user.status = 1;
     try {
       const data = await User.update(id, user);
