@@ -16,6 +16,10 @@ import { CertificateService } from "../certificates/certificate.service";
 import { CertificateRegisterDto } from "../certificates/dto/create.certificate.dto";
 import { Category } from "../category/entity/category.entity";
 import { UpdateRegisterDto } from "./update.victim.dto";
+import * as dotenv from "dotenv";
+dotenv.config();
+require("dotenv").config();
+
 export type Usa = any;
 @Injectable()
 export class VictimService {
@@ -54,6 +58,30 @@ export class VictimService {
     try {
       const data = await victim.save();
       await this.certificateService.createCertificate(data.id);
+
+      const number = "+25" + victim.primaryPhone;
+      const message =
+        "\n" +
+        "\n" +
+        "\n" +
+        "Dear " +
+        victim.firstName +
+        "\n" +
+        "\n" +
+        "You have registered successfully " +
+        "You belong to" +
+        " " +
+        victim.category.cateogryName +
+        " category";
+      const twilio = require("twilio")(process.env.SID, process.env.AUTHTOKEN);
+      await twilio.messages
+        .create({
+          from: process.env.TWILIONUMBER,
+          to: number,
+          body: message,
+        })
+        .then(() => console.log("message has sent"))
+        .catch((e) => console.log(e));
       return this.response.postResponse(data.id);
     } catch (error) {
       console.log(error);
