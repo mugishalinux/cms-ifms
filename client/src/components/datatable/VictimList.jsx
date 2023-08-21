@@ -138,7 +138,7 @@ const VictimList = () => {
   const [categoryName, setCategoryName] = useState("");
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [updateVictimModalOpen, setUpdateVictimModalOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const [categoryModalLoading, setCategoryModalLoading] = useState(false);
   const [updateModalLoading, setUpdateModalLoading] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
@@ -147,7 +147,7 @@ const VictimList = () => {
   const [payload, setPayload] = useState({
     firstName: "",
     lastName: "",
-    phoneNumber: "",
+    email: "",
     dob: "",
     user: 0,
     category: 0,
@@ -155,7 +155,7 @@ const VictimList = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [dob, setDob] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
   const categoryList = ["Category 1", "Category 2", "Category 3"]; // Replace with your actual category list
   //   const handleInputChange = (event) => {
   //     if (event.target.name === "locationName") {
@@ -175,8 +175,8 @@ const VictimList = () => {
       setLastName(event.target.value);
     } else if (event.target.name === "dob") {
       setDob(event.target.value);
-    } else if (event.target.name === "phoneNumber") {
-      setPhoneNumber(event.target.value);
+    } else if (event.target.name === "email") {
+      setEmail(event.target.value);
     } else if (event.target.name === "user") {
       setUser(event.target.value);
     } else if (event.target.name === "category") {
@@ -201,7 +201,8 @@ const VictimList = () => {
 
   const handleFormUpdateVictimSubmit = (event) => {
     event.preventDefault();
-    if (!firstName || !lastName || !dob || !phoneNumber || !user) {
+    setIsLoading(true); // Show the loader
+    if (!firstName || !lastName || !dob || !email || !user) {
       toast.error("Please fill in all the mandatory fields.", {
         position: "top-right",
         autoClose: 5000,
@@ -233,7 +234,7 @@ const VictimList = () => {
     const data = {
       firstName,
       lastName,
-      phoneNumber,
+      email,
       dob,
       user: auth().id,
       category: catId,
@@ -248,7 +249,7 @@ const VictimList = () => {
       .then((response) => {
         // Handle the response data
         // ...
-
+        setIsLoading(false); // Show the loader
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 2000,
@@ -276,7 +277,7 @@ const VictimList = () => {
       })
       .catch((error) => {
         let message = String(error.response?.data?.message || error.message);
-
+        setIsLoading(true); // Show the loader
         toast.error(message, {
           position: "top-right",
           autoClose: 5000,
@@ -303,7 +304,8 @@ const VictimList = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    if (!firstName || !lastName || !dob || !phoneNumber || !user) {
+    setIsLoading(true); // Show the loader
+    if (!firstName || !lastName || !dob || !email || !user) {
       toast.error("Please fill in all the mandatory fields.", {
         position: "top-right",
         autoClose: 5000,
@@ -336,7 +338,7 @@ const VictimList = () => {
     const data = {
       firstName,
       lastName,
-      phoneNumber,
+      email,
       dob,
       user: auth().id,
       category: catId,
@@ -351,7 +353,7 @@ const VictimList = () => {
       .then((response) => {
         // Handle the response data
         // ...
-
+        setIsLoading(false); // Show the loader
         toast.success(response.data.message, {
           position: "top-right",
           autoClose: 2000,
@@ -376,7 +378,7 @@ const VictimList = () => {
       })
       .catch((error) => {
         let message = String(error.response?.data?.message || error.message);
-
+        setIsLoading(false); // Show the loader
         toast.error(message, {
           position: "top-right",
           autoClose: 5000,
@@ -801,7 +803,7 @@ const VictimList = () => {
 
                 setFirstName(params.row.firstName);
                 setLastName(params.row.lastName);
-                setPhoneNumber(params.row.primaryPhone);
+                setEmail(params.row.email);
                 setDob(params.row.dob);
                 setCatId(params.row.category.id);
                 setTempId(params.row.id);
@@ -884,8 +886,7 @@ const VictimList = () => {
                   names: params.row.firstName + " " + params.row.lastName,
                   catName: params.row.category.cateogryName,
                 };
-                navigate('/certificate', { state: data });
-              
+                navigate("/certificate", { state: data });
               }}
             >
               Generate Certificate
@@ -953,7 +954,7 @@ const VictimList = () => {
                   const firstName = item.firstName || "";
                   const lastName = item.lastName || "";
                   const dob = item.dob || "";
-                  const primaryPhone = item.primaryPhone || "";
+                  const email = item.email || "";
                   const categoryName = item.category
                     ? item.category.categoryName || ""
                     : "";
@@ -962,7 +963,7 @@ const VictimList = () => {
                     firstName.toLowerCase().includes(search.toLowerCase()) ||
                     lastName.toLowerCase().includes(search.toLowerCase()) ||
                     dob.toLowerCase().includes(search.toLowerCase()) ||
-                    primaryPhone.toLowerCase().includes(search.toLowerCase()) ||
+                    email.toLowerCase().includes(search.toLowerCase()) ||
                     categoryName.toLowerCase().includes(search.toLowerCase())
                   );
                 })
@@ -1014,11 +1015,11 @@ const VictimList = () => {
                 InputLabelProps={{ shrink: true }}
               />
               <TextField
-                id="phoneNumber"
-                name="phoneNumber"
-                label="Phone Number"
+                id="email"
+                name="email"
+                label="Enter Email"
                 variant="outlined"
-                value={phoneNumber}
+                value={email}
                 onChange={handleInputChange}
                 fullWidth
                 required
@@ -1053,14 +1054,37 @@ const VictimList = () => {
                 ))}
               </TextField>
 
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                style={{ marginTop: "16px" }}
-              >
-                Save
-              </Button>
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    backgroundColor: "#00778b",
+                    border: "solid #00778b 2px",
+                    color: "white",
+                    borderRadius: "5px",
+                    height: "40px",
+                  }}
+                >
+                  <CircularProgress
+                    size={20}
+                    style={{ marginRight: "10px", color: "white" }}
+                  />
+                  <span>Please wait...</span>
+                </div>
+              ) : (
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: "16px" }}
+                >
+                  Save
+                </Button>
+              )}
+
               <Button
                 variant="contained"
                 style={{
@@ -1113,11 +1137,11 @@ const VictimList = () => {
                 InputLabelProps={{ shrink: true }}
               />
               <TextField
-                id="phoneNumber"
-                name="phoneNumber"
-                label="Phone Number"
+                id="email"
+                name="email"
+                label="Enter Email"
                 variant="outlined"
-                value={phoneNumber}
+                value={email}
                 onChange={handleInputChange}
                 fullWidth
                 style={{ marginTop: "10px" }}

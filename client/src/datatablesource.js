@@ -372,14 +372,13 @@ export const victimColumns = [
     },
   },
   {
-    field: "phone",
-    headerName: "phone",
-    width: 130,
+    field: "Email",
+    headerName: "Email",
+    width: 180,
     renderCell: (params) => {
-      const phoneNumber = params.row.primaryPhone;
-      const reformattedPhone = phoneNumber.substring(0);
+      const email = params.row.email;
 
-      return <div className="cellWithImg">{reformattedPhone}</div>;
+      return <div className="cellWithImg">{email}</div>;
     },
   },
   {

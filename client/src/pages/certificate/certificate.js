@@ -1,12 +1,34 @@
 import { margin } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import "./style.css";
+import { useNavigate } from "react-router-dom";
+
 const Certificate = () => {
+  const pdfRef = useRef();
   const location = useLocation();
+  const navigate = useNavigate();
   const { state } = location;
   const [loading, setLoading] = useState(false);
+  const [printing, setPrinting] = useState(false);
+  useEffect(() => {
+    // Add a listener to detect when the media type is "print"
+    const printMediaQuery = window.matchMedia("print");
+
+    function handlePrintMediaChange(e) {
+      setPrinting(e.matches);
+    }
+
+    printMediaQuery.addListener(handlePrintMediaChange);
+
+    // Clean up the listener when the component is unmounted
+    return () => {
+      printMediaQuery.removeListener(handlePrintMediaChange);
+    };
+  }, []);
+
   const styles = {
     container: {
       position: "relative",
@@ -144,6 +166,7 @@ const Certificate = () => {
 
   const handlePrint = () => {
     window.print();
+    navigate("/home");
   };
 
   // Function to get the current date in the format "MM/DD/YYYY"
@@ -155,17 +178,34 @@ const Certificate = () => {
     return `${month}/${day}/${year}`;
   };
   const downloadPdf = () => {
-    const capture = document.querySelector(".cert");
-    setLoading(true);
-    html2canvas(capture).then((canvas) => {
-      const imgData = canvas.toDataURL("img/png");
-      const doc = new jsPDF("p", "mm", "a4");
-      const componentWidth = doc.internal.pagesize.getWidth();
-      const componentHeight = doc.internal.pagesize.height();
-      doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-      setLoading(false);
-      doc.save("certificate.pdf");
-    });
+    window.print();
+    // setLoading(true);
+    // const input = pdfRef.current;
+    // html2canvas(input).then((canvas)=>{
+    //   const imgData = canvas.toDataURL("img/png");
+    //   const pdf = new jsPDF("p", "mm", "a4");
+    //   const pdfWidth = pdf.internal.pagesize.getWidth();
+    //   const pdfHeight = pdf.internal.pagesize.getHeigth();
+    //   const imgWidth = canvas.width;
+    //   const imgHeight = canvas.height;
+    //   const ratio = Math.min(pdfWidth/ imgWidth, pdfHeight/imgHeight);
+    //   const imgX = (pdfWidth - imgWidth * ratio) / 2;
+    //   const imgY = 30;
+    //   pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+    //   pdf.save("certificate.pdf");
+    // })
+
+    // const capture = document.querySelector(".cert");
+    // setLoading(true);
+    // html2canvas(capture).then((canvas) => {
+    //   const imgData = canvas.toDataURL("img/png");
+    //   const doc = new jsPDF("p", "mm", "a4");
+    //   const componentWidth = doc.internal.pagesize.getWidth();
+    //   const componentHeight = doc.internal.pagesize.height();
+    //   doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
+    //   setLoading(false);
+    //   doc.save("certificate.pdf");
+    // });
   };
 
   return (
@@ -173,6 +213,7 @@ const Certificate = () => {
       <div
         style={styles.container}
         className="container pm-certificate-container"
+        ref={pdfRef}
       >
         <div style={styles.outerBorder} className="outer-border"></div>
         <div style={styles.innerBorder} className="inner-border"></div>
@@ -246,29 +287,27 @@ const Certificate = () => {
       </div>
 
       <div>
-        {/* ... Your certificate content without the download button ... */}
-        <button
-          style={{
-            display: printMode ? "none" : "block",
+        <div>
+          {!printing && (
+            <button
+              style={{
+                display: printMode ? "none" : "block",
 
-            backgroundColor: "black",
-            border: "solid black 1px",
-            color: "white",
-            marginLeft: "550px",
-            marginTop: "80px",
-            padding: "10px",
-            fontSize: "30px",
-          }}
-          className={printMode ? "print-hidden" : ""}
-          onClick={downloadPdf}
-          disabled={!(loading === false)}
-        >
-          {loading ? (
-            <span>Downloading Certificate</span>
-          ) : (
-            <span> Download Certificate</span>
+                backgroundColor: "black",
+                border: "solid black 1px",
+                color: "white",
+                marginLeft: "650px",
+                marginTop: "80px",
+                padding: "10px",
+                fontSize: "30px",
+              }}
+              className="hide-on-print"
+              onClick={handlePrint}
+            >
+              Print Certificate
+            </button>
           )}
-        </button>
+        </div>
       </div>
     </>
   );

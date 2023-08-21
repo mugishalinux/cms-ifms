@@ -26,7 +26,7 @@ export class Victim extends BaseEntity {
   @Column({ nullable: true })
   dob: Date;
   @Column()
-  primaryPhone: string;
+  email: string;
   @Column()
   status: number;
   @Column({ nullable: true })

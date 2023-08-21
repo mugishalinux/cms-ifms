@@ -1,12 +1,22 @@
-/* Default style for the button */
-.print-button {
-    display: block;
+/* print-styles.css */
+
+/* Hide elements with class "no-print" when printing */
+@media print {
+  .no-print {
+    display: none;
   }
-  
-  /* Style to hide the button when printing */
-  @media print {
-    .print-button {
-      display: none;
-    }
+}
+
+/* Example: Adjust margins for the printed page */
+@media print {
+  body {
+    margin: 0;
   }
-  
+}
+
+/* print-styles.css */
+@media print {
+  .hide-on-print {
+    display: none !important;
+  }
+}

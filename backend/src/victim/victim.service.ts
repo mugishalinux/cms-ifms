@@ -19,21 +19,31 @@ import { UpdateRegisterDto } from "./update.victim.dto";
 import * as dotenv from "dotenv";
 dotenv.config();
 require("dotenv").config();
+import * as nodemailer from "nodemailer";
 
 export type Usa = any;
 @Injectable()
 export class VictimService {
+  private readonly transporter;
   constructor(
     private response: ResponseService,
     private certificateService: CertificateService,
-  ) {}
+  ) {
+    this.transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: "mugishapacifique1@gmail.com",
+        pass: "fmejxpnprdegyqco", // Use your Gmail app password here
+      },
+    });
+  }
 
   async createVictim(data: VictimRegisterDto) {
     const victim = new Victim();
     victim.firstName = data.firstName;
     victim.lastName = data.lastName;
     victim.dob = data.dob;
-    victim.primaryPhone = data.phoneNumber;
+    victim.email = data.email;
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;
@@ -55,33 +65,60 @@ export class VictimService {
         );
       victim.category = category;
     }
+
+    try {
+      // Send email
+      const info = await this.transporter.sendMail({
+        from: "mugishapacifique1@gmail.com",
+        to: victim.email,
+        subject: "You have registered successfully ",
+        text:
+          "\n" +
+          "\n" +
+          "\n" +
+          "Dear " +
+          victim.firstName +
+          "\n" +
+          "\n" +
+          "You have registered successfully " +
+          "You belong to" +
+          " " +
+          victim.category.cateogryName +
+          " category",
+      });
+
+      console.log("Email sent:", info.response);
+    } catch (error) {
+      console.error("Error sending email:", error);
+      throw new Error("Email could not be sent");
+    }
     try {
       const data = await victim.save();
       await this.certificateService.createCertificate(data.id);
 
-      const number = "+25" + victim.primaryPhone;
-      const message =
-        "\n" +
-        "\n" +
-        "\n" +
-        "Dear " +
-        victim.firstName +
-        "\n" +
-        "\n" +
-        "You have registered successfully " +
-        "You belong to" +
-        " " +
-        victim.category.cateogryName +
-        " category";
-      const twilio = require("twilio")(process.env.SID, process.env.AUTHTOKEN);
-      await twilio.messages
-        .create({
-          from: process.env.TWILIONUMBER,
-          to: number,
-          body: message,
-        })
-        .then(() => console.log("message has sent"))
-        .catch((e) => console.log(e));
+      // const number = "+25" + victim.primaryPhone;
+      // const message =
+      //   "\n" +
+      //   "\n" +
+      //   "\n" +
+      //   "Dear " +
+      //   victim.firstName +
+      //   "\n" +
+      //   "\n" +
+      //   "You have registered successfully " +
+      //   "You belong to" +
+      //   " " +
+      //   victim.category.cateogryName +
+      //   " category";
+      // const twilio = require("twilio")(process.env.SID, process.env.AUTHTOKEN);
+      // await twilio.messages
+      //   .create({
+      //     from: process.env.TWILIONUMBER,
+      //     to: number,
+      //     body: message,
+      //   })
+      //   .then(() => console.log("message has sent"))
+      //   .catch((e) => console.log(e));
       return this.response.postResponse(data.id);
     } catch (error) {
       console.log(error);
@@ -97,7 +134,7 @@ export class VictimService {
     victim.firstName = data.firstName;
     victim.lastName = data.lastName;
     victim.dob = data.dob;
-    victim.primaryPhone = data.phoneNumber;
+    victim.email = data.email;
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;

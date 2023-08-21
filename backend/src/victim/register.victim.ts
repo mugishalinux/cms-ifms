@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, Matches } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, Matches } from "class-validator";
 import { User } from "../user/user/entity/user.entity";
 
 export class VictimRegisterDto {
@@ -16,14 +16,11 @@ export class VictimRegisterDto {
   dob: Date;
 
   @IsNotEmpty()
-  @Matches(/(07[8,2,3,9])[0-9]{7}/, {
-    message:
-      "Primary Phone Number must be Airtel or MTN number formatted like 07*********",
-  })
+  @IsEmail()
   @ApiProperty({
-    description: "primary phone required",
+    description: "email required",
   })
-  phoneNumber: string;
+  email: string;
   @IsNotEmpty()
   @ApiProperty({
     description: "user is required",
