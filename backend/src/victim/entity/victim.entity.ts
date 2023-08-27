@@ -1,6 +1,7 @@
 import { Certificate } from "../../certificates/entity/certificate.entity";
 import {
   BaseEntity,
+  
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -27,6 +28,8 @@ export class Victim extends BaseEntity {
   dob: Date;
   @Column()
   email: string;
+  @Column()
+  phoneNumber: string;
   @Column()
   status: number;
   @Column({ nullable: true })

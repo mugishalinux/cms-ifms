@@ -179,33 +179,6 @@ const Certificate = () => {
   };
   const downloadPdf = () => {
     window.print();
-    // setLoading(true);
-    // const input = pdfRef.current;
-    // html2canvas(input).then((canvas)=>{
-    //   const imgData = canvas.toDataURL("img/png");
-    //   const pdf = new jsPDF("p", "mm", "a4");
-    //   const pdfWidth = pdf.internal.pagesize.getWidth();
-    //   const pdfHeight = pdf.internal.pagesize.getHeigth();
-    //   const imgWidth = canvas.width;
-    //   const imgHeight = canvas.height;
-    //   const ratio = Math.min(pdfWidth/ imgWidth, pdfHeight/imgHeight);
-    //   const imgX = (pdfWidth - imgWidth * ratio) / 2;
-    //   const imgY = 30;
-    //   pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-    //   pdf.save("certificate.pdf");
-    // })
-
-    // const capture = document.querySelector(".cert");
-    // setLoading(true);
-    // html2canvas(capture).then((canvas) => {
-    //   const imgData = canvas.toDataURL("img/png");
-    //   const doc = new jsPDF("p", "mm", "a4");
-    //   const componentWidth = doc.internal.pagesize.getWidth();
-    //   const componentHeight = doc.internal.pagesize.height();
-    //   doc.addImage(imgData, "PNG", 0, 0, componentWidth, componentHeight);
-    //   setLoading(false);
-    //   doc.save("certificate.pdf");
-    // });
   };
 
   return (

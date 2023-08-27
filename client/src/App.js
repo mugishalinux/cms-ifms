@@ -30,6 +30,7 @@ import Categories from "./pages/Locations/Categories";
 import Boat from "./pages/Boat/Boat";
 import NewBoat from "./pages/new_boat/New";
 import Payment from "./pages/payments/Payment";
+import Report from "./pages/report/report";
 import Certificate from "./pages/certificate/certificate";
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -67,6 +68,7 @@ function App() {
             <Route index element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="certificate" element={<Certificate />} />
+            <Route path="report" element={<Report />} />
             <Route path="appointment" element={<AppointmentList />} />
             <Route path="appoint" element={<Appoint />} />
             <Route

@@ -48,6 +48,7 @@ import {
 import { useAuthUser } from "react-auth-kit";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { SelectProvider } from "@mui/base";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -144,6 +145,7 @@ const VictimList = () => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [category, setCategory] = useState([]);
   const [catId, setCatId] = useState(0);
+  const [selectedOption, setSelectedOption] = useState(0);
   const [payload, setPayload] = useState({
     firstName: "",
     lastName: "",
@@ -167,6 +169,11 @@ const VictimList = () => {
   //       setCategoryName(event.target.value);
   //     }
   //   };
+
+  const handleProcess = (event) => {
+    setSelectedOption(event.target.value);
+    alert(selectedOption);
+  };
 
   const handleInputChange = (event) => {
     if (event.target.name === "firstName") {

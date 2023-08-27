@@ -20,7 +20,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { ApiBearerAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "../auth/auth.service";
 import { FilterHelper } from "../helpers/filter.helper";
-import { Not } from "typeorm";
+import { getRepository, Not } from "typeorm";
 
 import { HasRoles } from "../auth/has-roles.decorator";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -31,6 +31,7 @@ import { VictimService } from "./victim.service";
 import { VictimRegisterDto } from "./register.victim";
 import { User } from "../user/user/entity/user.entity";
 import { UpdateRegisterDto } from "./update.victim.dto";
+import { Victim } from "./entity/victim.entity";
 
 @Controller("victim")
 @ApiTags("victim")
@@ -95,6 +96,29 @@ export class VictimController {
   ) {
     return this.victimService.assignCategoryToVictim(id, catId);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Get("/ongoing")
+  allVictimOngingInProgram() {
+    const victims = Victim.query(`SELECT *
+    FROM victims
+    WHERE created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR);
+    `);
+    return victims;
+  }
+  @ApiBearerAuth()
+  @Get("/finished")
+  allVictimFinishedProgram() {
+    console.log("hitted")
+    console.log("hitted")
+    const victims = Victim.query(`SELECT *
+    FROM victims
+    WHERE created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR);
+    `);
+    return victims;
+  }
+
   @ApiBearerAuth()
   @HasRoles("admin")
   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -122,7 +122,7 @@ const Home = () => {
           <Featured todayIncome={todayVictimRegistered} percentage={300} />
           {/* <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} data={datas} /> */}
           <Chart
-            title="Last 6 Months (Revenue)"
+            title="Last 6 Months Victims Registered"
             aspect={2 / 1}
             data={allVictimsPerProvince}
           />

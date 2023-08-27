@@ -343,7 +343,7 @@ export const victimColumns = [
   {
     field: "Last Name",
     headerName: "Last Name",
-    width: 150,
+    width: 100,
     renderCell: (params) => {
       return <div className="cellWithImg">{params.row.lastName}</div>;
     },
@@ -351,7 +351,7 @@ export const victimColumns = [
   {
     field: "First Name",
     headerName: "First Name",
-    width: 130,
+    width: 100,
     renderCell: (params) => {
       return <div className="cellWithImg">{params.row.firstName}</div>;
     },
@@ -360,7 +360,7 @@ export const victimColumns = [
   {
     field: "Birth Date",
     headerName: "Birth Date",
-    width: 200,
+    width: 150,
     renderCell: (params) => {
       const dob = new Date(params.row.dob);
       const formattedDate = dob.toLocaleDateString("en-US", {
@@ -374,11 +374,21 @@ export const victimColumns = [
   {
     field: "Email",
     headerName: "Email",
-    width: 180,
+    width: 250,
     renderCell: (params) => {
       const email = params.row.email;
 
       return <div className="cellWithImg">{email}</div>;
+    },
+  },
+  {
+    field: "Phone Number",
+    headerName: "Phone Number",
+    width: 130,
+    renderCell: (params) => {
+      const phone = params.row.phoneNumber;
+
+      return <div className="cellWithImg">{phone}</div>;
     },
   },
   {
@@ -390,6 +400,107 @@ export const victimColumns = [
       const categoryName = category.cateogryName || "-";
 
       return <div className="cellWithImg">{categoryName}</div>;
+    },
+  },
+  {
+    field: "Starting Date",
+    headerName: "Starting Date",
+    width: 150,
+    renderCell: (params) => {
+      const dob = new Date(params.row.created_at);
+      const formattedDate = dob.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      return <div className="cellWithImg">{formattedDate}</div>;
+    },
+  },
+];
+
+export const victimsColumns = [
+  {
+    field: "id",
+    headerName: "ID",
+    width: 40,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.id}</div>;
+    },
+  },
+  {
+    field: "Last Name",
+    headerName: "Last Name",
+    width: 100,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.lastName}</div>;
+    },
+  },
+  {
+    field: "First Name",
+    headerName: "First Name",
+    width: 100,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.firstName}</div>;
+    },
+  },
+
+  {
+    field: "Birth Date",
+    headerName: "Birth Date",
+    width: 150,
+    renderCell: (params) => {
+      const dob = new Date(params.row.dob);
+      const formattedDate = dob.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      return <div className="cellWithImg">{formattedDate}</div>;
+    },
+  },
+  {
+    field: "Email",
+    headerName: "Email",
+    width: 250,
+    renderCell: (params) => {
+      const email = params.row.email;
+
+      return <div className="cellWithImg">{email}</div>;
+    },
+  },
+  {
+    field: "Phone Number",
+    headerName: "Phone Number",
+    width: 130,
+    renderCell: (params) => {
+      const phone = params.row.phoneNumber;
+
+      return <div className="cellWithImg">{phone}</div>;
+    },
+  },
+  {
+    field: "Category Name",
+    headerName: "Category Name",
+    width: 130,
+    renderCell: (params) => {
+      const category = params.row.category || {}; // Use an empty object as fallback
+      const categoryName = category.cateogryName || "-";
+
+      return <div className="cellWithImg">{params.row.cateogryName}</div>;
+    },
+  },
+  {
+    field: "Starting Date",
+    headerName: "Starting Date",
+    width: 150,
+    renderCell: (params) => {
+      const dob = new Date(params.row.created_at);
+      const formattedDate = dob.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      return <div className="cellWithImg">{formattedDate}</div>;
     },
   },
 ];

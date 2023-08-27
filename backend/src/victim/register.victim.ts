@@ -16,7 +16,6 @@ export class VictimRegisterDto {
   dob: Date;
 
   @IsNotEmpty()
-  @IsEmail()
   @ApiProperty({
     description: "email required",
   })
@@ -31,4 +30,10 @@ export class VictimRegisterDto {
     description: "category is required",
   })
   category: number;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "primary phone required",
+  })
+  phoneNumber: string;
 }

@@ -39,14 +39,42 @@ export class VictimService {
   }
 
   async createVictim(data: VictimRegisterDto) {
+    const phonePattern = /^(07[8239])[0-9]{7}$/;
+    // Test if the phoneNumber matches the pattern
+    if (!phonePattern.test(data.phoneNumber)) {
+      throw new BadRequestException(
+        "Primary Phone Number must be Airtel or MTN number formatted like 07*********",
+      );
+    }
+    const emailPattern = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+
+    // Test if the email matches the pattern
+    if (!emailPattern.test(data.email)) {
+      throw new BadRequestException("Invalid email address");
+    }
+    const phone = await Victim.findOne({
+      where: { phoneNumber: data.phoneNumber },
+    });
+
+    if (phone) {
+      console.log("phone exist ");
+      console.log(phone);
+      throw new BadRequestException("Phone number exist in our database");
+    }
+    const email = await Victim.findOne({ where: { email: data.email } });
+    if (email) {
+      throw new BadRequestException("Email exist in our database");
+    }
     const victim = new Victim();
     victim.firstName = data.firstName;
     victim.lastName = data.lastName;
     victim.dob = data.dob;
     victim.email = data.email;
+    victim.phoneNumber = data.phoneNumber;
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;
+
     // check if user exist
     const user = await User.findOne({
       where: { id: data.user },
@@ -127,6 +155,19 @@ export class VictimService {
   }
 
   async updateVictim(id: number, data: UpdateRegisterDto) {
+    const phonePattern = /^(07[8239])[0-9]{7}$/;
+    if (!phonePattern.test(data.phoneNumber)) {
+      throw new BadRequestException(
+        "Primary Phone Number must be Airtel or MTN number formatted like 07*********",
+      );
+    }
+    const emailPattern = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+
+    // Test if the email matches the pattern
+    if (!emailPattern.test(data.email)) {
+      throw new BadRequestException("Invalid email address");
+    }
+
     const victim = await Victim.findOne({
       where: { id },
     });
@@ -135,6 +176,7 @@ export class VictimService {
     victim.lastName = data.lastName;
     victim.dob = data.dob;
     victim.email = data.email;
+    victim.phoneNumber = data.phoneNumber;
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;

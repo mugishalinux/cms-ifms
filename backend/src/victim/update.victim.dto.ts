@@ -16,7 +16,6 @@ export class UpdateRegisterDto {
   dob: any;
 
   @IsNotEmpty()
-  @IsEmail()
   @ApiProperty({
     description: "email required",
   })
@@ -31,4 +30,9 @@ export class UpdateRegisterDto {
     description: "category is required",
   })
   category: number;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "primary phone required",
+  })
+  phoneNumber: string;
 }

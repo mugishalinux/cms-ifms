@@ -9,10 +9,11 @@ import { UserService } from "../user/user/user.service";
 import { VictimService } from "./victim.service";
 import { CertificateModule } from "../certificates/certificate.module";
 import { VictimsController } from "./victims.controller";
+import { VictimReportController } from "./victim.report.controller";
 
 @Module({
   imports: [forwardRef(() => AuthModule), ResponseModule, CertificateModule],
-  controllers: [VictimController,VictimsController],
+  controllers: [VictimController,VictimsController, VictimReportController],
   providers: [
     UserService,
     VictimService,
