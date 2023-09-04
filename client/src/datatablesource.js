@@ -341,6 +341,14 @@ export const victimColumns = [
     },
   },
   {
+    field: "serial number",
+    headerName: "Serial Number",
+    width: 120,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.serialNumber}</div>;
+    },
+  },
+  {
     field: "Last Name",
     headerName: "Last Name",
     width: 100,
@@ -374,7 +382,7 @@ export const victimColumns = [
   {
     field: "Email",
     headerName: "Email",
-    width: 250,
+    width: 180,
     renderCell: (params) => {
       const email = params.row.email;
 
@@ -425,6 +433,14 @@ export const victimsColumns = [
     width: 40,
     renderCell: (params) => {
       return <div className="cellWithImg">{params.row.id}</div>;
+    },
+  },
+  {
+    field: "serial number",
+    headerName: "Serial Number",
+    width: 80,
+    renderCell: (params) => {
+      return <div className="cellWithImg">{params.row.serialNumber}</div>;
     },
   },
   {

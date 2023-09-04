@@ -47,6 +47,10 @@ export class VictimController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   async createVictim(@Body() data: VictimRegisterDto, @Request() req) {
+    if (data.isOrphan == "yes") {
+      data.fatherNames = "";
+      data.motherNames = "";
+    }
     return this.victimService.createVictim(data);
   }
 
@@ -84,6 +88,10 @@ export class VictimController {
     @Body() data: UpdateRegisterDto,
     @Request() req,
   ) {
+    if (data.isOrphan == "yes") {
+      data.fatherNames = "";
+      data.motherNames = "";
+    }
     return this.victimService.updateVictim(id, data);
   }
   @ApiBearerAuth()
@@ -110,8 +118,8 @@ export class VictimController {
   @ApiBearerAuth()
   @Get("/finished")
   allVictimFinishedProgram() {
-    console.log("hitted")
-    console.log("hitted")
+    console.log("hitted");
+    console.log("hitted");
     const victims = Victim.query(`SELECT *
     FROM victims
     WHERE created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR);

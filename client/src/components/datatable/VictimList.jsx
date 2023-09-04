@@ -942,13 +942,13 @@ const VictimList = () => {
             }}
             className="btn-add"
           >
-            <Button
+            {/* <Button
               style={{ height: "50px" }}
               onClick={handleCategoryModalOpen}
               className="link-add"
             >
               Add New
-            </Button>
+            </Button> */}
           </div>
         </div>
         <DataGrid

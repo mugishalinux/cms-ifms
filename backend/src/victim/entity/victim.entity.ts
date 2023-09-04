@@ -1,7 +1,6 @@
 import { Certificate } from "../../certificates/entity/certificate.entity";
 import {
   BaseEntity,
-  
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -28,6 +27,28 @@ export class Victim extends BaseEntity {
   dob: Date;
   @Column()
   email: string;
+  @Column()
+  serialNumber: string;
+  @Column()
+  medicalInsurance: string;
+  @Column()
+  isOrphan: string;
+  @Column()
+  fatherNames: string;
+  @Column()
+  motherNames: string;
+  @Column()
+  guardiaNames: string;
+  @Column()
+  parentContact: string;
+  @Column()
+  childDob: Date;
+  @Column()
+  caseScenario: string;
+  @Column()
+  siblingNumber: string;
+  @Column()
+  educationLevel: string;
   @Column()
   phoneNumber: string;
   @Column()

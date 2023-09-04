@@ -63,7 +63,7 @@ const Login = () => {
       .post(`${BASE_URL}/user/auth/login/user`, data)
       .then((response) => {
         if (response.status == 201) {
-          if (response.data.access_level == "mentor") {
+          if (response.data.access_level == "health adviser") {
             setIsLoading(false); // Show the loader
             toast.error("You can't log in, only admin allowed to login", {
               position: "bottom-center",

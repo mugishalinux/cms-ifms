@@ -10,6 +10,7 @@ import { BASE_URL } from "../../config/baseUrl";
 import axios from "axios";
 import jsPDF from "jspdf";
 import "jspdf-autotable"; // Import the autoTable plugin
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import {
   userColumns,
   victimsColumns,
@@ -23,8 +24,27 @@ function Report() {
   const [victimOnGoing, setVictimOnGoing] = useState([]);
   const [victimFinished, setVictimFinished] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [category, setCategory] = useState([true]);
+  const [categorySelected, setCategorySelected] = useState(0);
 
-  const victimFinishedHandleExportToPDF = () => {
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/category`, {
+        headers: {
+          Authorization: `Bearer ${auth().jwtToken}`,
+        },
+      })
+      .then((response) => {
+        setCategory(response.data);
+      });
+  }, []);
+
+  const victimFinishedHandleExportToPDF = async () => {
+    //fetch victims finished
+    // const totalVictimsFinished = await axios.get(
+    //   `${BASE_URL}/victim-report/${categorySelected}`
+    // );
+
     const doc = new jsPDF();
 
     const columns = victimsColumns.map((column) => column.headerName);
@@ -37,6 +57,8 @@ function Report() {
 
         if (column === "ID") {
           value = item.id || ""; // Access the nested property directly
+        } else if (column === "Serial Number") {
+          value = item.serialNumber || ""; // Access the nested property directly
         } else if (column === "Last Name") {
           value = item.lastName || ""; // Access the nested property directly
         } else if (column === "First Name") {
@@ -68,7 +90,7 @@ function Report() {
 
     // Add a title
     doc.text(
-      `List Of All Victims Finished Program Total:(${victimFinished.length})`,
+      `All Victims Finished Program Total:(${victimFinished.length})`,
       105,
       10,
       { align: "center" }
@@ -84,7 +106,13 @@ function Report() {
     doc.save("victim_report_list.pdf");
   };
 
-  const victimOngoingHandleExportToPDF = () => {
+  const victimOngoingHandleExportToPDF = async () => {
+    //fetch victims finished
+    // const totalVictimsOngoing = await axios.get(
+    //   `${BASE_URL}/victim-report/unfinished/${categorySelected}`
+    // );
+    // setVictimOnGoing(totalVictimsOngoing.data);
+
     const doc = new jsPDF();
 
     const columns = victimsColumns.map((column) => column.headerName);
@@ -97,6 +125,8 @@ function Report() {
 
         if (column === "ID") {
           value = item.id || ""; // Access the nested property directly
+        } else if (column === "Serial Number") {
+          value = item.serialNumber || ""; // Access the nested property directly
         } else if (column === "Last Name") {
           value = item.lastName || ""; // Access the nested property directly
         } else if (column === "First Name") {
@@ -128,7 +158,7 @@ function Report() {
 
     // Add a title
     doc.text(
-      `List Of All Victims Ongoing in Program Total:(${victimOnGoing.length})`,
+      `All Victims Ongoing in Program Total:(${victimOnGoing.length})`,
       105,
       10,
       { align: "center" }
@@ -156,13 +186,13 @@ function Report() {
 
         //fetch victims finished
         const totalVictimsFinished = await axios.get(
-          `${BASE_URL}/victim-report`
+          `${BASE_URL}/victim-report/${categorySelected}`
         );
         setVictimFinished(totalVictimsFinished.data);
 
         //fetch victims finished
         const totalVictimsOngoing = await axios.get(
-          `${BASE_URL}/victim-report/unfinished`
+          `${BASE_URL}/victim-report/unfinished/${categorySelected}`
         );
         setVictimOnGoing(totalVictimsOngoing.data);
       } catch (error) {
@@ -171,15 +201,42 @@ function Report() {
       }
     };
     fetchUserInformation();
-  }, []);
+  }, [categorySelected]);
   if (isLoading) {
     return <FullScreenLoader />;
   }
+
+  const handleChange = (event) => {
+    setCategorySelected(event.target.value);
+  };
+
   return (
     <div className="home">
       <AdminSidebar />
       <div className="homeContainer">
         <Navbar imageUrl={user.profile} style={{ marginBottom: "50px" }} />
+
+        <div
+          style={{ marginTop: "100px", width: "200px", marginLeft: "130px" }}
+        >
+          <FormControl fullWidth>
+            <InputLabel>Select Category</InputLabel>
+
+            <Select
+              value={categorySelected}
+              label="Select Category"
+              onChange={handleChange}
+            >
+              {category.map((category) => (
+                <MenuItem key={category.id} value={category.id}>
+                  {category.cateogryName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {/* You can display the selected category ID */}
+        </div>
+
         <div style={{ display: "flex" }}>
           <button
             onClick={victimOngoingHandleExportToPDF}

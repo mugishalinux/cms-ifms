@@ -35,4 +35,57 @@ export class UpdateRegisterDto {
     description: "primary phone required",
   })
   phoneNumber: string;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "medical insurance required ",
+  })
+  medicalInsurance: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "child parent status required ",
+  })
+  isOrphan: string;
+  @IsOptional()
+  @ApiProperty({
+    description: "father names ",
+  })
+  fatherNames: string;
+  @IsOptional()
+  @ApiProperty({
+    description: "mother names ",
+  })
+  motherNames: string;
+  @IsOptional()
+  @ApiProperty({
+    description: "guardian names ",
+  })
+  guardiaNames: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "parent / guardian contacts ",
+  })
+  parentContact: string;
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "child date of birth required",
+  })
+  childDob: Date;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "is child raped or tempted status ",
+  })
+  caseScenario: string;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "how many sibling victim have ",
+  })
+  siblingNumber: string;
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "education level background",
+  })
+  educationLevel: string;
 }

@@ -34,24 +34,27 @@ export class VictimReportController {
 
   @ApiBearerAuth()
   @HasRoles("admin")
-  @Get("")
-  getAllVictimsFinished() {
-    const victims = Victim.query(`SELECT v.*, c.cateogryName
-    FROM victim v
+  @Get(":id")
+  getAllVictimsFinished(@Param("id") id: number) {
+    const victims = Victim.query(`SELECT
+    v.*,
+    c.cateogryName
+  FROM
+    victim v
     JOIN category c ON v.categoryId = c.id
-    WHERE v.created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR);
-    
-        `);
+  WHERE
+    v.created_at <= DATE_SUB(NOW(), INTERVAL 2 YEAR)
+    AND v.categoryId = ${id};`);
     return victims;
   }
   @ApiBearerAuth()
   @HasRoles("admin")
-  @Get("/unfinished")
-  getAllVictimsNotYetFinished() {
+  @Get("/unfinished/:id")
+  getAllVictimsNotYetFinished(@Param("id") id: number) {
     const victims = Victim.query(`SELECT v.*, c.cateogryName
         FROM victim v
         JOIN category c ON v.categoryId = c.id
-        WHERE v.created_at >= DATE_SUB(NOW(), INTERVAL 2 YEAR);
+        WHERE v.created_at >= DATE_SUB(NOW(), INTERVAL 2 YEAR) AND v.categoryId = ${id};;
         
         `);
     return victims;

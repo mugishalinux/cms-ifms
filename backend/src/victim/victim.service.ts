@@ -66,6 +66,11 @@ export class VictimService {
       throw new BadRequestException("Email exist in our database");
     }
     const victim = new Victim();
+    const count = await Victim.count();
+
+    // Increment the count by 1 and format it with leading zeros
+    const serialNumber = String(count + 1).padStart(7, "0");
+    victim.serialNumber = serialNumber;
     victim.firstName = data.firstName;
     victim.lastName = data.lastName;
     victim.dob = data.dob;
@@ -74,7 +79,17 @@ export class VictimService {
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;
-
+    victim.medicalInsurance = data.medicalInsurance;
+    victim.isOrphan = data.isOrphan;
+    victim.fatherNames = data.fatherNames;
+    victim.motherNames = data.motherNames;
+    victim.guardiaNames = data.guardiaNames
+    victim.parentContact = data.parentContact;
+    victim.parentContact = data.parentContact;
+    victim.childDob = data.childDob;
+    victim.caseScenario = data.caseScenario;
+    victim.siblingNumber = data.siblingNumber;
+    victim.educationLevel = data.educationLevel;
     // check if user exist
     const user = await User.findOne({
       where: { id: data.user },
@@ -180,6 +195,18 @@ export class VictimService {
     victim.status = 2;
     victim.created_by = 1;
     victim.updated_by = 1;
+    victim.medicalInsurance = data.medicalInsurance;
+    victim.isOrphan = data.isOrphan;
+    victim.fatherNames = data.fatherNames;
+    victim.motherNames = data.motherNames;
+    victim.parentContact = data.parentContact;
+    victim.parentContact = data.parentContact;
+    victim.childDob = data.childDob;
+    victim.caseScenario = data.caseScenario;
+    victim.siblingNumber = data.siblingNumber;
+    victim.educationLevel = data.educationLevel;
+    victim.guardiaNames = victim.guardiaNames;
+    
     // check if user exist
     const user = await User.findOne({
       where: { id: data.user },

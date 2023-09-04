@@ -52,7 +52,7 @@ export class UserController {
   @Post("createMentor")
   @ApiBearerAuth()
   async createMentor(@Body() userDto: RegisterDto) {
-    userDto.access_level = "mentor";
+    userDto.access_level = "health adviser";
     return this.userService.createUsers(userDto);
   }
   @Post("createAdmin")
@@ -82,7 +82,7 @@ export class UserController {
     const user = await User.findOne({
       where: { id: req.user.userId },
     });
-    if (user.access_level == "mentor") {
+    if (user.access_level == "health adviser") {
       console.log(user);
       throw new ForbiddenException("You are not allowed activate account");
     }
@@ -97,7 +97,7 @@ export class UserController {
     const user = await User.findOne({
       where: { id: req.user.userId },
     });
-    if (user.access_level == "mentor") {
+    if (user.access_level == "health adviser") {
       console.log(user);
       throw new ForbiddenException("You are not allowed activate account");
     }
@@ -163,7 +163,7 @@ export class UserController {
       {
         // ...filter,
         status: Not(8),
-        access_level: Not("mentor"),
+        access_level: Not("health adviser"),
       },
     );
     return user;
